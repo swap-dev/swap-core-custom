@@ -982,15 +982,11 @@ namespace cryptonote
     switch (decimal_point)
     {
       case 12:
-        return "monero";
-      case 9:
-        return "millinero";
+        return "swap";
       case 6:
-        return "micronero";
-      case 3:
-        return "nanonero";
+        return "swapini";
       case 0:
-        return "piconero";
+        return "atoms";
       default:
         ASSERT_MES_AND_THROW("Invalid decimal point specification: " << decimal_point);
     }
@@ -1215,24 +1211,8 @@ namespace cryptonote
   //---------------------------------------------------------------
   bool calculate_block_hash(const block& b, crypto::hash& res, const blobdata *blob)
   {
-    blobdata bd;
-    if (!blob)
-    {
-      bd = block_to_blob(b);
-      blob = &bd;
-    }
-
-    bool hash_result = get_object_hash(get_block_hashing_blob(b), res);
-    if (!hash_result)
-      return false;
-
-    if (b.miner_tx.vin.size() == 1 && b.miner_tx.vin[0].type() == typeid(cryptonote::txin_gen))
-    {
-      const cryptonote::txin_gen &txin_gen = boost::get<cryptonote::txin_gen>(b.miner_tx.vin[0]);
-      if (txin_gen.height != 202612)
-        return true;
-    }
-
+    return get_object_hash(get_block_hashing_blob(b), res);
+    /*
     // EXCEPTION FOR BLOCK 202612
     const std::string correct_blob_hash_202612 = "3a8a2b3a29b50fc86ff73dd087ea43c6f0d6b8f936c849194d5c84c737903966";
     const std::string existing_block_id_202612 = "bbd604d2ba11ba27935e006ed39c9bfdd99b76bf4a50654bc1e1e61217962698";
@@ -1254,6 +1234,7 @@ namespace cryptonote
       }
     }
     return hash_result;
+    */
   }
   //---------------------------------------------------------------
   bool get_block_hash(const block& b, crypto::hash& res)
